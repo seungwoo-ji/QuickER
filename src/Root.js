@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { StyleSheet, View, TextInput } from 'react-native';
 
 export default function App() {
   const [postalCode, setPostalCode] = useState('');
