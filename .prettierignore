@@ -1,0 +1,11 @@
+node_modules/
+.expo/
+.git/
+assets/
+.expo-shared/
+.gitignore
+package*.json
+.eslint*
+.prettier*
+app.json
+babel.config.js
