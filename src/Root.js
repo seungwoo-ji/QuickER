@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, TextInput, Text, Button, FlatList } from 'react-native';
-import { NavigationContainer, NavigationContext } from '@react-navigation/native';
+import { StyleSheet, View, TextInput, Text, FlatList, StatusBar } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+// import * as Location from 'expo-location';
+import HospitalDetails from './HospitalDetails';
+import HospitalCard from './HospitalCard';
 
 const Stack = createNativeStackNavigator();
 
-function HospitalCard({ data }) {
-  const navigation = React.useContext(NavigationContext);
-
+function FlatListItemSeparator() {
   return (
-    <View>
-      <Text>This is hospital {data.name}</Text>
-      <Button
-        title="OPEN"
-        onPress={() => {
-          navigation.navigate('HospitalDetails', {
-            id: data._id,
-          });
-        }}
-      />
+    <View style={{ backgroundColor: 'white', padding: 100 }}>
+      <Text>Testing</Text>
     </View>
   );
 }
@@ -35,53 +29,41 @@ function Home() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={{ flex: 1, alignItems: 'center' }}>
+      <StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
       <TextInput
         style={styles.searchBar}
         onChangeText={setPostalCode}
         value={postalCode}
         placeholder="Search by postal code"
       />
-
-      <FlatList data={hospitals} renderItem={({ item }) => <HospitalCard data={item} />} />
-    </View>
-  );
-}
-
-function HospitalDetails({ route, navigation }) {
-  const [hospitalInfo, setHospitalInfo] = useState({});
-  const { id } = route.params;
-
-  useEffect(() => {
-    fetch(`http://192.168.1.175:8080/api/${id}`)
-      .then((res) => res.json())
-      .then((hospital) => setHospitalInfo(hospital))
-      .catch((err) => console.error(err));
-  }, [id]);
-
-  return (
-    <View>
-      <Text>TODO: Hospital details </Text>
-      {!hospitalInfo ? (
-        <Text>Loading...</Text>
-      ) : (
-        <View>
-          <Text>{hospitalInfo._id}</Text>
-          <Text>{hospitalInfo.name}</Text>
-        </View>
-      )}
-    </View>
+      <FlatList
+        contentContainerStyle={styles.hospitalList}
+        data={hospitals}
+        renderItem={({ item }) => <HospitalCard data={item} />}
+        keyExtractor={(item) => item._id}
+        ItemSeparatorComponent={FlatListItemSeparator}
+      />
+    </SafeAreaView>
   );
 }
 
 export default function Root() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="HospitalDetails" component={HospitalDetails} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Home"
+            component={Home}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen name="HospitalDetails" component={HospitalDetails} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
 
@@ -91,6 +73,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  hospitalList: {
+    flex: 1,
+    justifyContent: 'space-evenly',
   },
   searchBar: {},
 });
