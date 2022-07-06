@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
-// import * as Location from 'expo-location';
+import * as Location from 'expo-location';
 
 import Logo from '../assets/QuickER.png';
 import Constants from './Constants';
@@ -61,6 +61,7 @@ function Home() {
   const [postalCode, setPostalCode] = useState('');
   const [hospitals, setHospitals] = useState([]);
   const [openedSettings, setOpenedSettings] = useState(false);
+  const [userLocation, setUserLocation] = useState({});
 
   useEffect(() => {
     fetch(`${Constants.apiUrl}/api`)
@@ -68,6 +69,18 @@ function Home() {
       .then((hs) => setHospitals(hs))
       .catch((err) => console.error(err))
       .finally(() => setLoading(false));
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation({ lat: location.latitude, lng: location.longitude });
+    })();
   }, []);
 
   return (
