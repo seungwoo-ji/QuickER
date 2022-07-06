@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 // import * as Location from 'expo-location';
+import Constants from './Constants';
 import HospitalDetails from './HospitalDetails';
 import HospitalCard from './HospitalCard';
 
@@ -22,7 +23,7 @@ function Home() {
   const [hospitals, setHospitals] = useState([]);
 
   useEffect(() => {
-    fetch('http://192.168.1.175:8080/api')
+    fetch(`${Constants.apiUrl}/api`)
       .then((res) => res.json())
       .then((hs) => setHospitals(hs))
       .catch((err) => console.error(err));

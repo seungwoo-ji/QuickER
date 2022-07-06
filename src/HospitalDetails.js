@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
-
 import MapView from 'react-native-maps';
+
+import Constants from './Constants';
 
 // const { height, width } = Dimensions.get('window');
 // const [currentLongitude, setCurrentLongitude] = useState('...');
@@ -25,7 +26,7 @@ export default function HospitalDetails({ route }) {
   const { id } = route.params;
 
   useEffect(() => {
-    fetch(`http://192.168.1.175:8080/api/${id}`)
+    fetch(`${Constants.apiUrl}/api/${id}`)
       .then((res) => res.json())
       .then((hospital) => setHospitalInfo(hospital))
       .catch((err) => console.error(err));
