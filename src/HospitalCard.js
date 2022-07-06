@@ -11,11 +11,13 @@ function Circle({ rate }) {
   );
 }
 
-function HospitalCard({ data }) {
+function HospitalCard(props) {
   const navigation = React.useContext(NavigationContext);
+  const { data, style } = props;
 
   return (
     <TouchableHighlight
+      style={style}
       underlayColor="#DDDDDD"
       onPress={() => {
         navigation.navigate('HospitalDetails', { id: data._id });
@@ -23,8 +25,11 @@ function HospitalCard({ data }) {
     >
       <View style={styles.card}>
         <Circle rate={45} />
-        <Text>This is hospital {data.name}</Text>
-        <Ionicons name="information-circle-outline" size={24} color="black" />
+        <View style={styles.description}>
+          <Text>{data.name}</Text>
+          <Text>min</Text>
+        </View>
+        <Ionicons style={styles.icon} name="information-circle-outline" size={24} color="black" />
       </View>
     </TouchableHighlight>
   );
@@ -34,7 +39,11 @@ const styles = StyleSheet.create({
   card: {
     flexDirection: 'row',
     backgroundColor: 'pink',
-    padding: 20,
+    padding: 10,
+    borderRadius: 10,
+  },
+  description: {
+    justifyContent: 'space-between',
   },
   circle: {
     width: 60,
@@ -47,6 +56,10 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  icon: {
+    alignSelf: 'center',
+    marginLeft: 'auto',
   },
 });
 
