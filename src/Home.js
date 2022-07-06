@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
+  Animated,
+  ActivityIndicator,
   StyleSheet,
   View,
   TextInput,
@@ -7,59 +9,102 @@ import {
   FlatList,
   StatusBar,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { AntDesign } from '@expo/vector-icons';
+import { AntDesign, FontAwesome } from '@expo/vector-icons';
 // import * as Location from 'expo-location';
+
+import Logo from '../assets/QuickER.png';
 import Constants from './Constants';
 import HospitalCard from './HospitalCard';
 
-// function FlatListItemSeparator() {
-//   return (
-//     <View style={{ backgroundColor: 'white', padding: 100 }}>
-//       <Text>Testing</Text>
-//     </View>
-//   );
-// }
+import Setting from './Setting';
+
+function NoHospitalFound() {
+  return (
+    <View style={styles.noHospitalFound}>
+      <AntDesign style={styles.noHospitalFrown} name="frowno" size={30} color="black" />
+      <Text style={styles.noHospitalFoundText}>Oops! No hospital found</Text>
+    </View>
+  );
+}
+
+function CogToggle({ value, onToggle }) {
+  const spinValue = useRef(new Animated.Value(0)).current;
+
+  const toggle = () => {
+    const endValue = value ? 0 : 1;
+    Animated.spring(spinValue, {
+      toValue: endValue,
+      useNativeDriver: false,
+    }).start();
+    onToggle(!value);
+  };
+
+  const spinDeg = spinValue.interpolate({
+    useNativeDriver: false,
+    inputRange: [0, 1],
+    outputRange: ['0deg', '90deg'],
+  });
+
+  return (
+    <TouchableHighlight underlayColor="gray" style={styles.sortButton} onPress={toggle}>
+      <Animated.View style={{ transform: [{ rotate: spinDeg }] }}>
+        <FontAwesome name="cog" size={24} color="#9FA5AA" />
+      </Animated.View>
+    </TouchableHighlight>
+  );
+}
 
 function Home() {
+  const [loading, setLoading] = useState(true);
   const [postalCode, setPostalCode] = useState('');
   const [hospitals, setHospitals] = useState([]);
+  const [openedSettings, setOpenedSettings] = useState(false);
 
   useEffect(() => {
     fetch(`${Constants.apiUrl}/api`)
       .then((res) => res.json())
       .then((hs) => setHospitals(hs))
-      .catch((err) => console.error(err));
+      .catch((err) => console.error(err))
+      .finally(() => setLoading(false));
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
+      <View style={styles.imageContainer}>
+        <Image source={Logo} style={styles.image} />
+      </View>
       <View style={styles.header}>
         <TextInput
           style={styles.searchBar}
           onChangeText={setPostalCode}
           value={postalCode}
           placeholder="Search by postal code"
+          placeholderTextColor="#adb2b6"
           autoCapitalize="characters"
           autoComplete="postal-code"
           textContentType="postalCode"
           returnKeyType="search"
         />
-        <TouchableHighlight onPress={() => {}}>
-          <View style={styles.sortButton}>
-            <Text style={{ color: '#5a5a5a' }}>Sort</Text>
-            <AntDesign name="down" size={20} color="#5a5a5a" />
-          </View>
-        </TouchableHighlight>
+        <CogToggle value={openedSettings} onToggle={setOpenedSettings} />
       </View>
-      <FlatList
-        contentContainerStyle={styles.hospitalList}
-        data={hospitals}
-        renderItem={({ item }) => <HospitalCard data={item} style={styles.hospitalCard} />}
-        keyExtractor={(item) => item._id}
-      />
+      {openedSettings && <Setting />}
+      {loading ? (
+        <ActivityIndicator size="large" color="#9FA5AA" />
+      ) : (
+        <View style={{ flex: 1 }}>
+          <FlatList
+            contentContainerStyle={styles.hospitalList}
+            data={hospitals}
+            renderItem={({ item }) => <HospitalCard data={item} style={styles.hospitalCard} />}
+            keyExtractor={(item) => item._id}
+            ListEmptyComponent={NoHospitalFound}
+          />
+        </View>
+      )}
     </SafeAreaView>
   );
 }
@@ -76,22 +121,43 @@ const styles = StyleSheet.create({
     borderColor: '#9FA5AA',
     borderRadius: 5,
     paddingHorizontal: 10,
+    marginRight: 15,
     height: 40,
+    backgroundColor: '#fff',
   },
   sortButton: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#dcdcdc',
     paddingHorizontal: 10,
-    borderRadius: 5,
+    borderRadius: 20,
   },
   hospitalList: {
     paddingHorizontal: '10%',
   },
   hospitalCard: {
     marginBottom: 25,
+  },
+  imageContainer: {
+    marginTop: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: 125,
+    height: 55,
+  },
+  noHospitalFound: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  noHospitalFrown: {
+    color: '#9FA5AA',
+    marginBottom: 10,
+  },
+  noHospitalFoundText: {
+    color: '#9FA5AA',
+    fontSize: 20,
   },
 });
 
