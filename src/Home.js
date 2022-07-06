@@ -18,7 +18,6 @@ import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import Logo from '../assets/QuickER.png';
 import Constants from './Constants';
 import HospitalCard from './HospitalCard';
-
 import Setting from './Setting';
 
 function NoHospitalFound() {

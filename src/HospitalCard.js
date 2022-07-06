@@ -19,7 +19,7 @@ function HospitalCard({ data, style }) {
       style={[styles.touchable, style]}
       underlayColor="#DDDDDD"
       onPress={() => {
-        navigation.navigate('HospitalDetails', { id: data._id });
+        navigation.navigate('HospitalDetails', { id: data._id, name: data.name });
       }}
     >
       <View style={styles.card}>

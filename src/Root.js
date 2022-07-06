@@ -20,7 +20,11 @@ export default function Root() {
               headerShown: false,
             }}
           />
-          <Stack.Screen name="HospitalDetails" component={HospitalDetails} />
+          <Stack.Screen
+            name="HospitalDetails"
+            component={HospitalDetails}
+            options={({ route }) => ({ title: route.params.name })}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
