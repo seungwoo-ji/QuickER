@@ -2,38 +2,65 @@ import { FontAwesome, FontAwesome5, Ionicons, Octicons } from '@expo/vector-icon
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, Switch, TouchableHighlight } from 'react-native';
 
-function TogglableButton({ children }) {
+function TogglableButton({ value, toggle, iconName, iconType, text }) {
+  const graphicColor = value ? '#000' : '#9fa5aa';
+  const IconType = iconType;
+
   return (
-    <TouchableHighlight style={styles.icon} underlayColor="#DDDDDD" onPress={() => {}}>
+    <TouchableHighlight
+      style={styles.icon}
+      underlayColor="#DDDDDD"
+      onPress={() => {
+        toggle(!value);
+      }}
+    >
       <View
         style={{
           ...styles.icon,
+          color: graphicColor,
           backgroundColor: 'white',
           justifyContent: 'center',
           alignItems: 'center',
         }}
       >
-        {children}
+        <IconType style={{ color: graphicColor }} size={20} name={iconName} />
+        <Text style={[styles.text, { color: graphicColor }]}>{text}</Text>
       </View>
     </TouchableHighlight>
   );
 }
 
-function Setting() {
+function Setting({
+  traffic,
+  toggleTraffic,
+  occupancy,
+  toggleOccupancy,
+  waitingTime,
+  toggleWaitingTime,
+}) {
   return (
     <View style={styles.container}>
-      <TogglableButton>
-        <FontAwesome5 size={20} name="traffic-light" />
-        <Text style={styles.text}>Traffic</Text>
-      </TogglableButton>
-      <TogglableButton>
-        <Ionicons size={20} name="person" />
-        <Text style={styles.text}>Occupancy</Text>
-      </TogglableButton>
-      <TogglableButton>
-        <Octicons size={20} name="clock" />
-        <Text style={styles.text}>Waiting Time</Text>
-      </TogglableButton>
+      <TogglableButton
+        value={traffic}
+        toggle={toggleTraffic}
+        iconName="traffic-light"
+        iconType={FontAwesome5}
+        text="Traffic"
+      />
+      <TogglableButton
+        value={occupancy}
+        toggle={toggleOccupancy}
+        iconName="person"
+        iconType={Ionicons}
+        text="Occupancy"
+      />
+      <TogglableButton
+        value={waitingTime}
+        toggle={toggleWaitingTime}
+        iconName="clock"
+        iconType={Octicons}
+        text="Waiting Time"
+      />
     </View>
   );
 }

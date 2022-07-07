@@ -61,9 +61,72 @@ function Home() {
   const [postalCode, setPostalCode] = useState('');
   const [hospitals, setHospitals] = useState([]);
   const [openedSettings, setOpenedSettings] = useState(false);
-  const [userLocation, setUserLocation] = useState({});
+  const [sortByTraffic, setSortByTraffic] = useState(false);
+  const [sortByOccupancy, setSortByOccupancy] = useState(false);
+  const [sortByWaitingTime, setSortByWaitingTime] = useState(false);
+  const [userLocation, setUserLocation] = useState(null);
 
   const transitionVal = useRef(new Animated.Value(0)).current;
+
+  const search = async () => {
+    setLoading(true);
+
+    const url = new URL('/api', Constants.apiUrl);
+
+    if (postalCode) {
+      url.searchParams.append('postalCode', postalCode);
+    } else if (userLocation) {
+      url.searchParams.append('latitude', userLocation.lat);
+      url.searchParams.append('longitude', userLocation.lng);
+    } else {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const res = await fetch(url);
+      const newHospitals = await res.json();
+      setHospitals(newHospitals);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sortHospitals = () => {
+    let hospitalsToSort = [...hospitals];
+
+    hospitalsToSort.sort((h1, h2) => {
+      const calculateMagnitudeOfHospital = (h) => {
+        return (
+          h.distance +
+          h.trafficTime * sortByTraffic +
+          h.occupancyRate * sortByOccupancy +
+          h.waitingTime * sortByWaitingTime
+        );
+      };
+
+      const h1Magnitude = calculateMagnitudeOfHospital(h1);
+      const h2Magnitude = calculateMagnitudeOfHospital(h2);
+
+      return h1Magnitude - h2Magnitude;
+    });
+
+    return hospitalsToSort;
+  };
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        return;
+      }
+
+      const location = await Location.getCurrentPositionAsync({});
+      setUserLocation({ lat: location.latitude, lng: location.longitude });
+    })();
+  }, []);
 
   useEffect(() => {
     const endValue = openedSettings ? 1 : 0;
@@ -88,24 +151,28 @@ function Home() {
   });
 
   useEffect(() => {
-    fetch(`${Constants.apiUrl}/api`)
-      .then((res) => res.json())
-      .then((hs) => setHospitals(hs))
-      .catch((err) => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
     (async () => {
-      const { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
+      if (!userLocation) {
+        setLoading(false);
         return;
       }
 
-      const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({ lat: location.latitude, lng: location.longitude });
+      const url = new URL('/api', Constants.apiUrl);
+
+      url.searchParams.append('latitude', userLocation.lat);
+      url.searchParams.append('longitude', userLocation.lng);
+
+      try {
+        const res = await fetch(url);
+        const newHospitals = await res.json();
+        setHospitals(newHospitals);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     })();
-  }, []);
+  }, [userLocation]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -118,6 +185,7 @@ function Home() {
           style={styles.searchBar}
           onChangeText={setPostalCode}
           value={postalCode}
+          onSubmitEditing={search}
           placeholder="Search by postal code"
           placeholderTextColor="#adb2b6"
           autoCapitalize="characters"
@@ -128,7 +196,14 @@ function Home() {
         <CogToggle value={openedSettings} onToggle={setOpenedSettings} />
       </View>
       <Animated.View style={{ transform: [{ translateX: position }] }}>
-        <Setting />
+        <Setting
+          traffic={sortByTraffic}
+          toggleTraffic={setSortByTraffic}
+          occupancy={sortByOccupancy}
+          toggleOccupancy={setSortByOccupancy}
+          waitingTime={sortByWaitingTime}
+          toggleWaitingTime={setSortByWaitingTime}
+        />
       </Animated.View>
       <Animated.View style={{ flex: 1, marginTop: margin }}>
         {loading ? (
@@ -137,7 +212,7 @@ function Home() {
           <View style={{ flex: 1 }}>
             <FlatList
               contentContainerStyle={styles.hospitalList}
-              data={hospitals}
+              data={sortHospitals()}
               renderItem={({ item }) => <HospitalCard data={item} style={styles.hospitalCard} />}
               keyExtractor={(item) => item._id}
               ListEmptyComponent={NoHospitalFound}
