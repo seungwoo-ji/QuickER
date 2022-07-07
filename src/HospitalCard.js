@@ -4,9 +4,14 @@ import { NavigationContext } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 
 function Circle({ rate }) {
+  function percentageToHsl(percentage, hue0, hue1) {
+    const hue = percentage * (hue1 - hue0) + hue0;
+    return `hsl(${hue}, 60%, 45%)`;
+  }
+
   return (
-    <View style={styles.circle}>
-      <Text style={styles.text}>{rate}%</Text>
+    <View style={{ ...styles.circle, backgroundColor: percentageToHsl(Math.min(rate, 1), 120, 0) }}>
+      <Text style={styles.text}>{rate * 100}%</Text>
     </View>
   );
 }
@@ -23,7 +28,7 @@ function HospitalCard({ data, style }) {
       }}
     >
       <View style={styles.card}>
-        <Circle rate={45} />
+        <Circle rate={0.25} />
         <View style={styles.description}>
           <View style={{ alignSelf: 'center' }}>
             <Text style={{ fontWeight: '600' }}>{data.name}</Text>
@@ -69,7 +74,6 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: 'green',
     alignItems: 'center',
     justifyContent: 'center',
   },
