@@ -219,6 +219,10 @@ function Home() {
             />
           </View>
         )}
+        <View style={styles.socialMedia}>
+          <AntDesign style={{ marginRight: 8 }} name="facebook-square" size={24} color="black" />
+          <FontAwesome name="twitter-square" size={24} color="black" />
+        </View>
       </Animated.View>
     </SafeAreaView>
   );
@@ -273,6 +277,13 @@ const styles = StyleSheet.create({
   noHospitalFoundText: {
     color: '#9FA5AA',
     fontSize: 20,
+  },
+  socialMedia: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    paddingVertical: 15,
+    marginHorizontal: '10%',
   },
 });
 
