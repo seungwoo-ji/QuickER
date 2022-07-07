@@ -84,7 +84,7 @@ function Home() {
   const position = transitionVal.interpolate({
     useNativeDriver: false,
     inputRange: [0, 0.5, 1],
-    outputRange: [-500, -300, 0],
+    outputRange: [-1000, -300, 0],
   });
 
   useEffect(() => {
