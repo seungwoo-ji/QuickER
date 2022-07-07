@@ -1,6 +1,7 @@
-import { FontAwesome, FontAwesome5, Ionicons, Octicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, Switch, TouchableHighlight } from 'react-native';
+import { FontAwesome5, Ionicons, Octicons } from '@expo/vector-icons';
+import React from 'react';
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
+import PropTypes from 'prop-types';
 
 function TogglableButton({ value, toggle, iconName, iconType, text }) {
   const graphicColor = value ? '#000' : '#9fa5aa';
@@ -18,9 +19,6 @@ function TogglableButton({ value, toggle, iconName, iconType, text }) {
         style={{
           ...styles.icon,
           color: graphicColor,
-          backgroundColor: 'white',
-          justifyContent: 'center',
-          alignItems: 'center',
         }}
       >
         <IconType style={{ color: graphicColor }} size={20} name={iconName} />
@@ -29,6 +27,14 @@ function TogglableButton({ value, toggle, iconName, iconType, text }) {
     </TouchableHighlight>
   );
 }
+
+TogglableButton.propTypes = {
+  value: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+  iconName: PropTypes.string.isRequired,
+  iconType: PropTypes.oneOf([FontAwesome5, Ionicons, Octicons]).isRequired,
+  text: PropTypes.string.isRequired,
+};
 
 function Setting({
   traffic,
@@ -80,6 +86,9 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 38,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text: {
     fontSize: 9,

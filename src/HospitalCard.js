@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight, Platform } from 'react-native';
 import { NavigationContext } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
 
 function Circle({ rate }) {
   function percentageToHsl(percentage, hue0, hue1) {
@@ -11,10 +12,14 @@ function Circle({ rate }) {
 
   return (
     <View style={{ ...styles.circle, backgroundColor: percentageToHsl(Math.min(rate, 1), 120, 0) }}>
-      <Text style={styles.text}>{(rate * 100).toFixed()}%</Text>
+      <Text style={styles.circleText}>{(rate * 100).toFixed()}%</Text>
     </View>
   );
 }
+
+Circle.propTypes = {
+  rate: PropTypes.number.isRequired,
+};
 
 function formatTrafficTime(trafficTime) {
   const hour = (trafficTime / 60).toFixed(0);
@@ -39,21 +44,36 @@ function HospitalCard({ data, style }) {
       <View style={styles.card}>
         <Circle rate={data.occupancy_rate} />
         <View style={styles.description}>
-          <View style={{ flexShrink: 1 }}>
-            <Text numberOfLines={2} style={{ fontWeight: '600', flexShrink: 1 }}>
+          <View style={styles.hospitalTextWrap}>
+            <Text numberOfLines={2} style={styles.hospitalName}>
               {data.name}
             </Text>
           </View>
-          <Text style={{ fontSize: 12, color: '#9FA5AA', fontWeight: 'bold' }}>
-            <Ionicons style={{ color: '#9FA5AA' }} name="car" size={13} color="black" />
+          <Text style={styles.trafficText}>
+            <Ionicons style={styles.carIcon} name="car" size={13} color="black" />
             {formatTrafficTime(data.traffic_time)}
           </Text>
         </View>
-        <Ionicons style={styles.icon} name="information-circle-outline" size={24} color="black" />
+        <Ionicons
+          style={styles.infoIcon}
+          name="information-circle-outline"
+          size={24}
+          color="black"
+        />
       </View>
     </TouchableHighlight>
   );
 }
+
+HospitalCard.propTypes = {
+  data: PropTypes.shape({
+    _id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    traffic_time: PropTypes.number.isRequired,
+    occupancy_rate: PropTypes.number.isRequired,
+  }).isRequired,
+  style: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   touchable: { borderRadius: 10 },
@@ -90,11 +110,26 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
+  circleText: {
     color: 'white',
     fontWeight: 'bold',
   },
-  icon: {
+  hospitalTextWrap: {
+    flexShrink: 1,
+  },
+  hospitalName: {
+    fontWeight: '600',
+    flexShrink: 1,
+  },
+  trafficText: {
+    fontSize: 12,
+    color: '#9FA5AA',
+    fontWeight: 'bold',
+  },
+  carIcon: {
+    color: '#9FA5AA',
+  },
+  infoIcon: {
     alignSelf: 'center',
     marginLeft: 'auto',
   },

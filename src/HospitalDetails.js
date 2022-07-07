@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import MapView from 'react-native-maps';
 import openMap from 'react-native-open-maps';
+import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 import Constants from './Constants';
@@ -35,6 +36,11 @@ function DetailCard({ onPress, children }) {
     </TouchableHighlight>
   );
 }
+
+DetailCard.propTypes = {
+  onPress: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
+};
 
 function formatWaitTime(waitTime) {
   const hour = (waitTime / 60).toFixed(0);
@@ -150,6 +156,14 @@ export default function HospitalDetails({ route }) {
     </View>
   );
 }
+
+HospitalDetails.propTypes = {
+  route: PropTypes.shape({
+    params: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+};
 
 const styles = StyleSheet.create({
   container: {

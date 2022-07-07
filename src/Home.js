@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
+import PropTypes from 'prop-types';
 
 import Logo from '../assets/QuickER.png';
 import Constants from './Constants';
@@ -55,6 +56,11 @@ function CogToggle({ value, onToggle }) {
     </TouchableHighlight>
   );
 }
+
+CogToggle.propTypes = {
+  value: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+};
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -172,7 +178,7 @@ function Home() {
   }, [userLocation]);
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={styles.flexWrap}>
       <StatusBar backgroundColor="#61dafb" barStyle="dark-content" />
       <View style={styles.imageContainer}>
         <Image source={Logo} style={styles.image} />
@@ -202,11 +208,11 @@ function Home() {
           toggleWaitingTime={setSortByWaitingTime}
         />
       </Animated.View>
-      <Animated.View style={{ flex: 1, marginTop: margin }}>
+      <Animated.View style={{ ...styles.flexWrap, marginTop: margin }}>
         {loading ? (
           <ActivityIndicator size="large" color="#9FA5AA" />
         ) : (
-          <View style={{ flex: 1 }}>
+          <View style={styles.flexWrap}>
             <FlatList
               contentContainerStyle={styles.hospitalList}
               data={sortHospitals()}
@@ -217,7 +223,7 @@ function Home() {
           </View>
         )}
         <View style={styles.socialMedia}>
-          <AntDesign style={{ marginRight: 8 }} name="facebook-square" size={24} color="black" />
+          <AntDesign style={styles.socialIcon} name="facebook-square" size={24} color="black" />
           <FontAwesome name="twitter-square" size={24} color="black" />
         </View>
       </Animated.View>
@@ -226,6 +232,9 @@ function Home() {
 }
 
 const styles = StyleSheet.create({
+  flexWrap: {
+    flex: 1,
+  },
   header: {
     marginHorizontal: '10%',
     flexDirection: 'row',
@@ -281,6 +290,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 15,
     marginHorizontal: '10%',
+  },
+  socialIcon: {
+    marginRight: 8,
   },
 });
 
