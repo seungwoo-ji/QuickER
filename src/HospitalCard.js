@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text, TouchableHighlight, Platform } from 'react-native';
 import { NavigationContext } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import PropTypes from 'prop-types';
 
 function Circle({ rate }) {
   return (
@@ -10,6 +11,10 @@ function Circle({ rate }) {
     </View>
   );
 }
+
+Circle.propTypes = {
+  rate: PropTypes.number.isRequired,
+};
 
 function HospitalCard({ data, style }) {
   const navigation = React.useContext(NavigationContext);
@@ -38,6 +43,11 @@ function HospitalCard({ data, style }) {
     </TouchableHighlight>
   );
 }
+
+HospitalCard.propTypes = {
+  data: PropTypes.object.isRequired,
+  style: PropTypes.object.isRequired,
+};
 
 const styles = StyleSheet.create({
   touchable: { borderRadius: 10 },

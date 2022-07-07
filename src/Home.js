@@ -14,6 +14,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
+import PropTypes from 'prop-types';
 
 import Logo from '../assets/QuickER.png';
 import Constants from './Constants';
@@ -55,6 +56,11 @@ function CogToggle({ value, onToggle }) {
     </TouchableHighlight>
   );
 }
+
+CogToggle.propTypes = {
+  value: PropTypes.bool.isRequired,
+  onToggle: PropTypes.func.isRequired,
+};
 
 function Home() {
   const [loading, setLoading] = useState(true);

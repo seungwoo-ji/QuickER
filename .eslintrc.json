@@ -22,15 +22,44 @@
     ],
     "rules": {
         // allow .js files to contain JSX code
-        "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
-            
+        "react/jsx-filename-extension": [
+            1,
+            {
+                "extensions": [
+                    ".js",
+                    ".jsx"
+                ]
+            }
+        ],
         // prevent eslint to complain about the "styles" variable being used before it was defined
-        "no-use-before-define": ["error", { "variables": false }],
-
+        "no-use-before-define": [
+            "error",
+            {
+                "variables": false
+            }
+        ],
         // ignore errors for the react-navigation package
-        "react/prop-types": ["error", {"ignore": ["navigation", "navigation.navigate"]}],
-
+        "react/prop-types": [
+            "error",
+            {
+                "ignore": [
+                    "navigation",
+                    "navigation.navigate"
+                ]
+            }
+        ],
         // ignore dangling error
-        "no-underscore-dangle": 0
+        "no-underscore-dangle": 0,
+        // allow error, warning console log. Otherwise, show error
+        "no-console": [
+            "error",
+            {
+                "allow": [
+                    "warn",
+                    "error"
+                ]
+            }
+        ],
+        "react/forbid-prop-types": 0
     }
 }

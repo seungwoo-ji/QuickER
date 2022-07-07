@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Dimensions,
-  Linking,
-  TouchableHighlight,
-  Platform,
-} from 'react-native';
+import { View, Text, StyleSheet, Linking, TouchableHighlight, Platform } from 'react-native';
 import MapView from 'react-native-maps';
 import openMap from 'react-native-open-maps';
+import PropTypes from 'prop-types';
 
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
 import Constants from './Constants';
 
-//https://blog.logrocket.com/applying-box-shadows-in-react-native/
+// https://blog.logrocket.com/applying-box-shadows-in-react-native/
 
 const generateBoxShadow = (
   xOffset,
@@ -88,6 +81,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 });
+
 export default function HospitalDetails({ route }) {
   const [hospitalInfo, setHospitalInfo] = useState({});
   const { id } = route.params;
@@ -167,3 +161,7 @@ export default function HospitalDetails({ route }) {
     </View>
   );
 }
+
+HospitalDetails.propTypes = {
+  route: PropTypes.object.isRequired,
+};

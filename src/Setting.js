@@ -1,6 +1,7 @@
-import { FontAwesome, FontAwesome5, Ionicons, Octicons } from '@expo/vector-icons';
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, Switch, TouchableHighlight } from 'react-native';
+import { FontAwesome5, Ionicons, Octicons } from '@expo/vector-icons';
+import React from 'react';
+import { View, StyleSheet, Text, TouchableHighlight } from 'react-native';
+import PropTypes from 'prop-types';
 
 function TogglableButton({ children }) {
   return (
@@ -18,6 +19,10 @@ function TogglableButton({ children }) {
     </TouchableHighlight>
   );
 }
+
+TogglableButton.propTypes = {
+  children: PropTypes.node.isRequired,
+};
 
 function Setting() {
   return (
