@@ -30,8 +30,10 @@ function HospitalCard({ data, style }) {
       <View style={styles.card}>
         <Circle rate={0.25} />
         <View style={styles.description}>
-          <View style={{ alignSelf: 'center' }}>
-            <Text style={{ fontWeight: '600' }}>{data.name}</Text>
+          <View style={{ flexShrink: 1 }}>
+            <Text numberOfLines={2} style={{ fontWeight: '600', flexShrink: 1 }}>
+              {data.name}
+            </Text>
           </View>
           <Text style={{ fontSize: 12, color: '#9FA5AA', fontWeight: 'bold' }}>
             <Ionicons style={{ color: '#9FA5AA' }} name="car" size={13} color="black" />
@@ -69,6 +71,8 @@ const styles = StyleSheet.create({
   description: {
     marginLeft: 20,
     justifyContent: 'space-around',
+    flexShrink: 1,
+    marginRight: 10,
   },
   circle: {
     width: 60,
