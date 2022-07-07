@@ -63,6 +63,30 @@ function Home() {
   const [openedSettings, setOpenedSettings] = useState(false);
   const [userLocation, setUserLocation] = useState({});
 
+  const transitionVal = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    const endValue = openedSettings ? 1 : 0;
+
+    Animated.timing(transitionVal, {
+      toValue: endValue,
+      duration: 500,
+      useNativeDriver: false,
+    }).start();
+  }, [openedSettings, transitionVal]);
+
+  const margin = transitionVal.interpolate({
+    useNativeDriver: false,
+    inputRange: [0, 0.5, 1],
+    outputRange: [-125, -10, 0],
+  });
+
+  const position = transitionVal.interpolate({
+    useNativeDriver: false,
+    inputRange: [0, 0.5, 1],
+    outputRange: [-500, -300, 0],
+  });
+
   useEffect(() => {
     fetch(`${Constants.apiUrl}/api`)
       .then((res) => res.json())
@@ -103,20 +127,24 @@ function Home() {
         />
         <CogToggle value={openedSettings} onToggle={setOpenedSettings} />
       </View>
-      {openedSettings && <Setting />}
-      {loading ? (
-        <ActivityIndicator size="large" color="#9FA5AA" />
-      ) : (
-        <View style={{ flex: 1 }}>
-          <FlatList
-            contentContainerStyle={styles.hospitalList}
-            data={hospitals}
-            renderItem={({ item }) => <HospitalCard data={item} style={styles.hospitalCard} />}
-            keyExtractor={(item) => item._id}
-            ListEmptyComponent={NoHospitalFound}
-          />
-        </View>
-      )}
+      <Animated.View style={{ transform: [{ translateX: position }] }}>
+        <Setting />
+      </Animated.View>
+      <Animated.View style={{ flex: 1, marginTop: margin }}>
+        {loading ? (
+          <ActivityIndicator size="large" color="#9FA5AA" />
+        ) : (
+          <View style={{ flex: 1 }}>
+            <FlatList
+              contentContainerStyle={styles.hospitalList}
+              data={hospitals}
+              renderItem={({ item }) => <HospitalCard data={item} style={styles.hospitalCard} />}
+              keyExtractor={(item) => item._id}
+              ListEmptyComponent={NoHospitalFound}
+            />
+          </View>
+        )}
+      </Animated.View>
     </SafeAreaView>
   );
 }
