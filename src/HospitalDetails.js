@@ -83,6 +83,7 @@ export default function HospitalDetails({ route }) {
             style={{
               flex: 1,
             }}
+            provider="google"
             showsUserLocation
             followUserLocation
             showsPointsOfInterest={false}
@@ -128,6 +129,7 @@ export default function HospitalDetails({ route }) {
             <DetailCard
               onPress={() =>
                 openMap({
+                  provider: 'google',
                   query: hospitalInfo.address,
                 })
               }
@@ -166,7 +168,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   infoIcon: {
-    marginLeft: '20%',
+    marginLeft: '8%',
   },
   infoTxt: {
     marginLeft: '10%',
