@@ -4,22 +4,7 @@ import { NavigationContext } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
 import PropTypes from 'prop-types';
 
-function Circle({ rate }) {
-  function percentageToHsl(percentage, hue0, hue1) {
-    const hue = percentage * (hue1 - hue0) + hue0;
-    return `hsl(${hue}, 60%, 45%)`;
-  }
-
-  return (
-    <View style={{ ...styles.circle, backgroundColor: percentageToHsl(Math.min(rate, 1), 120, 0) }}>
-      <Text style={styles.circleText}>{(rate * 100).toFixed()}%</Text>
-    </View>
-  );
-}
-
-Circle.propTypes = {
-  rate: PropTypes.number.isRequired,
-};
+import Circle from './Circle';
 
 function formatTrafficTime(trafficTime) {
   const hour = (trafficTime / 60).toFixed(0);
@@ -102,17 +87,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexShrink: 1,
     marginRight: 10,
-  },
-  circle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  circleText: {
-    color: 'white',
-    fontWeight: 'bold',
   },
   hospitalTextWrap: {
     flexShrink: 1,

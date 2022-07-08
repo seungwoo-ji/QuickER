@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Linking,
-  TouchableHighlight,
-  Platform,
-  Dimensions,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, Linking, Platform, Dimensions, ScrollView } from 'react-native';
 import MapView from 'react-native-maps';
 import openMap from 'react-native-open-maps';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons, MaterialIcons, FontAwesome } from '@expo/vector-icons';
 
-import Constants from './Constants';
+import Constants from '../Constants';
+import DetailCard from './DetailCard';
 
 function formatPhoneNumber(phoneNumberString) {
   const cleaned = `${phoneNumberString}`.replace(/\D/g, '');
@@ -24,23 +16,6 @@ function formatPhoneNumber(phoneNumberString) {
   }
   return null;
 }
-
-function DetailCard({ onPress, children }) {
-  return (
-    <TouchableHighlight
-      style={{ borderRadius: 10, marginTop: 20 }}
-      onPress={onPress}
-      underlayColor="#DDDDDD"
-    >
-      {children}
-    </TouchableHighlight>
-  );
-}
-
-DetailCard.propTypes = {
-  onPress: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
-};
 
 function formatWaitTime(waitTime) {
   const hour = (waitTime / 60).toFixed(0);

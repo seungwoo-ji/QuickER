@@ -5,62 +5,20 @@ import {
   StyleSheet,
   View,
   TextInput,
-  Text,
   FlatList,
   StatusBar,
-  TouchableHighlight,
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AntDesign, FontAwesome } from '@expo/vector-icons';
 import * as Location from 'expo-location';
-import PropTypes from 'prop-types';
 
-import Logo from '../assets/QuickER.png';
-import Constants from './Constants';
-import HospitalCard from './HospitalCard';
+import Logo from '../../assets/QuickER.png';
+import Constants from '../Constants';
+import HospitalCard from '../HospitalCard';
 import Setting from './Setting';
-
-function NoHospitalFound() {
-  return (
-    <View style={styles.noHospitalFound}>
-      <AntDesign style={styles.noHospitalFrown} name="frowno" size={30} color="black" />
-      <Text style={styles.noHospitalFoundText}>Oops! No hospital found</Text>
-    </View>
-  );
-}
-
-function CogToggle({ value, onToggle }) {
-  const spinValue = useRef(new Animated.Value(0)).current;
-
-  const toggle = () => {
-    const endValue = value ? 0 : 1;
-    Animated.spring(spinValue, {
-      toValue: endValue,
-      useNativeDriver: false,
-    }).start();
-    onToggle(!value);
-  };
-
-  const spinDeg = spinValue.interpolate({
-    useNativeDriver: false,
-    inputRange: [0, 1],
-    outputRange: ['0deg', '90deg'],
-  });
-
-  return (
-    <TouchableHighlight underlayColor="gray" style={styles.sortButton} onPress={toggle}>
-      <Animated.View style={{ transform: [{ rotate: spinDeg }] }}>
-        <FontAwesome name="cog" size={24} color="#9FA5AA" />
-      </Animated.View>
-    </TouchableHighlight>
-  );
-}
-
-CogToggle.propTypes = {
-  value: PropTypes.bool.isRequired,
-  onToggle: PropTypes.func.isRequired,
-};
+import NoHospitalFound from './NoHospitalFound';
+import CogToggle from './CogToggle';
 
 function Home() {
   const [loading, setLoading] = useState(true);
@@ -250,13 +208,6 @@ const styles = StyleSheet.create({
     height: 40,
     backgroundColor: '#fff',
   },
-  sortButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    borderRadius: 20,
-  },
   hospitalList: {
     paddingHorizontal: '10%',
   },
@@ -271,18 +222,6 @@ const styles = StyleSheet.create({
   image: {
     width: 125,
     height: 55,
-  },
-  noHospitalFound: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  noHospitalFrown: {
-    color: '#9FA5AA',
-    marginBottom: 10,
-  },
-  noHospitalFoundText: {
-    color: '#9FA5AA',
-    fontSize: 20,
   },
   socialMedia: {
     flexDirection: 'row',
