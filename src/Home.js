@@ -124,7 +124,7 @@ function Home() {
       }
 
       const location = await Location.getCurrentPositionAsync({});
-      setUserLocation({ lat: location.latitude, lng: location.longitude });
+      setUserLocation({ lat: location.coords.latitude, lng: location.coords.longitude });
     })();
   }, []);
 
