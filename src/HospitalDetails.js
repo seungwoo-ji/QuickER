@@ -36,6 +36,15 @@ function DetailCard({ onPress, children }) {
   );
 }
 
+function formatWaitTime(waitTime) {
+  const hour = (waitTime / 60).toFixed(0);
+  const minute = waitTime % 60;
+
+  const timeString = hour > 0 ? ` ${hour} h` : '';
+
+  return `${timeString} ${minute} min`;
+}
+
 export default function HospitalDetails({ route }) {
   const [hospitalInfo, setHospitalInfo] = useState(null);
   const [isPortrait, setIsPortrait] = useState(false);
@@ -97,7 +106,7 @@ export default function HospitalDetails({ route }) {
               <View style={styles.bedIcons}>
                 <FontAwesome name="hourglass" size={24} color="black" />
                 <Text>Waiting time</Text>
-                <Text>{hospitalInfo.wait_time} min</Text>
+                <Text>{formatWaitTime(hospitalInfo.wait_time)}</Text>
               </View>
               <View style={styles.bedIcons}>
                 <MaterialCommunityIcons name="bed-empty" size={30} color="black" />

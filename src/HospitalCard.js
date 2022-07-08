@@ -11,9 +11,18 @@ function Circle({ rate }) {
 
   return (
     <View style={{ ...styles.circle, backgroundColor: percentageToHsl(Math.min(rate, 1), 120, 0) }}>
-      <Text style={styles.text}>{rate * 100}%</Text>
+      <Text style={styles.text}>{(rate * 100).toFixed()}%</Text>
     </View>
   );
+}
+
+function formatTrafficTime(trafficTime) {
+  const hour = (trafficTime / 60).toFixed(0);
+  const minute = trafficTime % 60;
+
+  const timeString = hour > 0 ? ` ${hour} h` : '';
+
+  return `${timeString} ${minute} min`;
 }
 
 function HospitalCard({ data, style }) {
@@ -28,7 +37,7 @@ function HospitalCard({ data, style }) {
       }}
     >
       <View style={styles.card}>
-        <Circle rate={0.25} />
+        <Circle rate={data.occupancy_rate} />
         <View style={styles.description}>
           <View style={{ flexShrink: 1 }}>
             <Text numberOfLines={2} style={{ fontWeight: '600', flexShrink: 1 }}>
@@ -37,7 +46,7 @@ function HospitalCard({ data, style }) {
           </View>
           <Text style={{ fontSize: 12, color: '#9FA5AA', fontWeight: 'bold' }}>
             <Ionicons style={{ color: '#9FA5AA' }} name="car" size={13} color="black" />
-            {` 15 min`}
+            {formatTrafficTime(data.traffic_time)}
           </Text>
         </View>
         <Ionicons style={styles.icon} name="information-circle-outline" size={24} color="black" />

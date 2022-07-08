@@ -95,17 +95,14 @@ function Home() {
   };
 
   const sortHospitals = () => {
-    let hospitalsToSort = [...hospitals];
+    const hospitalsToSort = [...hospitals];
 
     hospitalsToSort.sort((h1, h2) => {
-      const calculateMagnitudeOfHospital = (h) => {
-        return (
-          h.distance +
-          h.trafficTime * sortByTraffic +
-          h.occupancyRate * sortByOccupancy +
-          h.waitingTime * sortByWaitingTime
-        );
-      };
+      const calculateMagnitudeOfHospital = (h) =>
+        h.dist +
+        h.traffic_time * sortByTraffic +
+        h.occupancy_rate * 100 * sortByOccupancy +
+        h.wait_time * sortByWaitingTime;
 
       const h1Magnitude = calculateMagnitudeOfHospital(h1);
       const h2Magnitude = calculateMagnitudeOfHospital(h2);
